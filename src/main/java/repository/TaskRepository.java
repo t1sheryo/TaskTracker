@@ -20,7 +20,7 @@ public interface TaskRepository {
     Task addTask(Task addedTask);
     Task updateTask(Task updatedTask);
     boolean deleteTask(Task deletedTask);
-    boolean changeTaskStatus(Long id, Status newStatus);
+    Task changeTaskStatus(Long id, Status newStatus);
     List<Task> getAllTasks();
     List<Task> getTasksByStatus(Status status);
 }
