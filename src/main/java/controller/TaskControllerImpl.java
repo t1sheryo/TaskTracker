@@ -17,46 +17,87 @@ public class TaskControllerImpl implements TaskController {
 
     @Override
     public Task addTask(Task addedTask) {
-        return null;
+        // FIXME: display task
+        return taskService.addTask(addedTask);
     }
 
     @Override
     public Task updateTask(Task updatedTask) {
-        return null;
+        // FIXME: display task
+        return taskService.updateTask(updatedTask);
     }
 
     @Override
     public boolean deleteTask(Task deletedTask) {
-        return false;
+        // FIXME: display task
+        return taskService.deleteTask(deletedTask);
     }
 
     @Override
     public Task markTaskAsInProgress(Long id) {
-        return null;
+        // FIXME: display task
+        return taskService.markTaskAsInProgress(id);
     }
 
     @Override
     public Task markTaskAsDone(Long id) {
-        return null;
+        // FIXME: display task
+        return taskService.markTaskAsDone(id);
     }
 
     @Override
     public List<Task> getAllTasks() {
-        return List.of();
+        List<Task> lst = taskService.getAllTasks();
+
+        lst.forEach(task -> {
+            System.out.println("Task : id: " + task.getId() +
+                    " status: " + task.getStatus() +
+                    " createdAt: " + task.getCreatedAt() +
+                    " updatedAt: " + task.getUpdatedAt());
+        });
+
+        return lst;
     }
 
     @Override
     public List<Task> getDoneTasks() {
-        return List.of();
+        List<Task> lst = taskService.getDoneTasks();
+
+        lst.forEach(task -> {
+                    System.out.println("Task : id: " + task.getId() +
+                            " status: " + task.getStatus() +
+                            " createdAt: " + task.getCreatedAt() +
+                            " updatedAt: " + task.getUpdatedAt());
+                });
+
+        return lst;
     }
 
     @Override
     public List<Task> getNotDoneTasks() {
-        return List.of();
+        List<Task> lst = taskService.getNotDoneTasks();
+
+        lst.forEach(task -> {
+            System.out.println("Task : id: " + task.getId() +
+                    " status: " + task.getStatus() +
+                    " createdAt: " + task.getCreatedAt() +
+                    " updatedAt: " + task.getUpdatedAt());
+        });
+
+        return lst;
     }
 
     @Override
     public List<Task> getInProgressTasks() {
-        return List.of();
+        List<Task> lst = taskService.getInProgressTasks();
+
+        lst.forEach(task -> {
+            System.out.println("Task : id: " + task.getId() +
+                    " status: " + task.getStatus() +
+                    " createdAt: " + task.getCreatedAt() +
+                    " updatedAt: " + task.getUpdatedAt());
+        });
+
+        return lst;
     }
 }
