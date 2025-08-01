@@ -19,8 +19,8 @@ public interface TaskService {
     Task addTask(Task addedTask);
     Task updateTask(Task updatedTask);
     boolean deleteTask(Task deletedTask);
-    boolean markTaskAsInProgress(Long id);
-    boolean markTaskAsDone(Long id);
+    Task markTaskAsInProgress(Long id);
+    Task markTaskAsDone(Long id);
     List<Task> getAllTasks();
     List<Task> getDoneTasks();
     List<Task> getNotDoneTasks();

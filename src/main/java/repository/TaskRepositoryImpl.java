@@ -3,6 +3,7 @@ package repository;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.nio.file.Files;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import exception.TaskNotFoundException;
 import lombok.AllArgsConstructor;
 
 import enums.Status;
@@ -61,6 +63,10 @@ public class TaskRepositoryImpl implements TaskRepository {
     public Task addTask(Task addedTask) {
         checkFileExistenceAndCreate();
 
+        addedTask.setStatus(Status.TODO);
+        addedTask.setCreatedAt(LocalDateTime.now());
+        addedTask.setUpdatedAt(LocalDateTime.now());
+
         writeObjectToFile(addedTask);
 
         return addedTask;
@@ -69,6 +75,10 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     public Task updateTask(Task updatedTask) {
         dataHelper data = getTaskById(updatedTask.getId());
+
+        updatedTask.setStatus(Status.TODO);
+        updatedTask.setUpdatedAt(LocalDateTime.now());
+
         data.task = updatedTask;
         writeListOfObjectToFile(data.tasks);
 
@@ -139,7 +149,7 @@ public class TaskRepositoryImpl implements TaskRepository {
                 tasks.stream()
                     .filter(task -> task.getId().equals(id))
                     .findAny()
-                    .orElseThrow()
+                    .orElseThrow(() -> new TaskNotFoundException("No task with id " + id))
         );
     }
 
