@@ -1,11 +1,11 @@
 package controller;
 
-import model.Task;
-import service.TaskService;
-
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
+
+import model.Task;
+import service.TaskService;
 
 public class TaskControllerImpl implements TaskController {
     private TaskService taskService;

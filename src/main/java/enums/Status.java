@@ -1,7 +1,5 @@
 package enums;
 
-//status: The status of the task (todo, in-progress, done)
-
 import lombok.Getter;
 
 @Getter
