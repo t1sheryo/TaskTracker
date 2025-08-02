@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -12,7 +13,7 @@ public class TaskServiceImpl implements TaskService {
     private static final ReentrantLock lock = new ReentrantLock();
     private static TaskServiceImpl instance;
 
-    public TaskServiceImpl(TaskRepository taskRepository) {
+    private TaskServiceImpl(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
@@ -68,14 +69,18 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getNotDoneTasks() {
-        List<Task> tasks = taskRepository.getTasksByStatus(Status.TODO);
+        List<Task> tasks = new ArrayList<>(taskRepository.getTasksByStatus(Status.TODO));
         tasks.addAll(taskRepository.getTasksByStatus(Status.IN_PROGRESS));
-
         return tasks;
     }
 
     @Override
     public List<Task> getInProgressTasks() {
         return taskRepository.getTasksByStatus(Status.IN_PROGRESS);
+    }
+
+    @Override
+    public void verifyIDVariable(){
+        taskRepository.verifyIDVariable();
     }
 }

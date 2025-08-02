@@ -25,4 +25,5 @@ public interface TaskService {
     List<Task> getDoneTasks();
     List<Task> getNotDoneTasks();
     List<Task> getInProgressTasks();
+    void verifyIDVariable();
 }

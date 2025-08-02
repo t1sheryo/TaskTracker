@@ -3,8 +3,7 @@ package model;
 
 import java.time.LocalDateTime;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import enums.Status;
 
@@ -22,6 +21,9 @@ Make sure to add these properties to the JSON file when adding a new task and up
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Task {
     private static Long ID_VARIABLE = 0L;
 
@@ -43,5 +45,13 @@ public class Task {
     private Status status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public void initializeId(){
+        id = ++ID_VARIABLE;
+    }
+
+    public static void updateIDVariable(Long id){
+        ID_VARIABLE = id;
+    }
 }
 

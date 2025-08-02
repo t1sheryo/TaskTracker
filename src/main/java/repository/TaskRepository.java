@@ -23,4 +23,5 @@ public interface TaskRepository {
     Task changeTaskStatus(Long id, Status newStatus);
     List<Task> getAllTasks();
     List<Task> getTasksByStatus(Status status);
+    void verifyIDVariable();
 }
