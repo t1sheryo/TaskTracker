@@ -29,6 +29,7 @@ task-cli list : List all tasks
 task-cli list-todo : List all undone tasks
 task-cli list-in-progress : List all In-Progress tasks
 task-cli list-done : List all Done tasks
+task-cli help : Shows list of available commands
 task-cli quit : Quit the program
 ```
 
