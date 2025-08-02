@@ -1,13 +1,7 @@
 [ {
-  "id" : 2,
-  "description" : "Buy eggs",
-  "status" : "DONE",
-  "createdAt" : "2025-08-02T15:21:47.0696384",
-  "updatedAt" : "2025-08-02T15:21:47.0701795"
-}, {
-  "id" : 3,
-  "description" : "Buy brain",
+  "id" : 1,
+  "description" : "Buy groceries",
   "status" : "TODO",
-  "createdAt" : "2025-08-02T15:22:05.9170855",
-  "updatedAt" : "2025-08-02T15:22:05.9170855"
+  "createdAt" : "2025-08-02T19:57:11.3108153",
+  "updatedAt" : "2025-08-02T19:57:11.3108153"
 } ]

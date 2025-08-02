@@ -23,24 +23,26 @@ import model.Task;
 public class TaskRepositoryImpl implements TaskRepository {
     private static TaskRepositoryImpl instance;
     private static final ReentrantLock lock;
-    private final String filepath;
     private final Path path;
-    private static final String FILEPATH = System.getProperty("user.dir") + "\\tmp\\";
+    private static final String DIRECTORY = System.getProperty("user.dir") + "\\tmp\\";
     private static final ObjectMapper mapper;
 
     static {
         lock = new ReentrantLock();
         mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT); // enables pretty format
-        // Регистрируем модуль для работы с Java 8 датами
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.registerModule(new JavaTimeModule());
-        // Отключаем запись дат как timestamp (будет читаемый формат)
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
     private TaskRepositoryImpl(String filename) {
-        this.filepath = FILEPATH + filename;
-        this.path = Path.of(filepath);
+        try {
+            Files.createDirectories(Path.of(DIRECTORY));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        this.path = Path.of(DIRECTORY + filename);
     }
 
     public static TaskRepositoryImpl getInstance(String filename) {
@@ -57,7 +59,6 @@ public class TaskRepositoryImpl implements TaskRepository {
         return instance;
     }
 
-    // class to hold List of all object and necessary object
     @AllArgsConstructor
     private static class dataHelper{
         List<Task> tasks;
@@ -165,20 +166,6 @@ public class TaskRepositoryImpl implements TaskRepository {
         );
     }
 
-//    private void writeObjectToFile(Task taskToWrite) {
-//        try {
-//            String json = mapper.writeValueAsString(taskToWrite);
-//
-//            Files.writeString(
-//                    path,
-//                    json,
-//                    StandardOpenOption.APPEND
-//            );
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
     private void writeObjectsToFile(List<Task> tasksToWrite) {
         try {
             String json = mapper.writeValueAsString(tasksToWrite);
@@ -195,7 +182,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     private List<Task> readDataFromFile() {
         try {
-            String json = Files.readString(path); // reads whole file and puts it in single string
+            String json = Files.readString(path);
 
             return convertJsonDataToPOJO(json);
         } catch (IOException e) {
