@@ -1,18 +1,19 @@
 package repository;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
-import java.nio.file.Files;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import exception.TaskNotFoundException;
 import lombok.AllArgsConstructor;
 
@@ -24,17 +25,21 @@ public class TaskRepositoryImpl implements TaskRepository {
     private static final ReentrantLock lock;
     private final String filepath;
     private final Path path;
-    private static final String FILEPATH_PREFIX = "\\src\\main\\resources\\";
+    private static final String FILEPATH = System.getProperty("user.dir") + "\\tmp\\";
     private static final ObjectMapper mapper;
 
     static {
         lock = new ReentrantLock();
         mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT); // enables pretty format
+        // Регистрируем модуль для работы с Java 8 датами
+        mapper.registerModule(new JavaTimeModule());
+        // Отключаем запись дат как timestamp (будет читаемый формат)
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
     private TaskRepositoryImpl(String filename) {
-        this.filepath = FILEPATH_PREFIX + filename;
+        this.filepath = FILEPATH + filename;
         this.path = Path.of(filepath);
     }
 
@@ -63,11 +68,15 @@ public class TaskRepositoryImpl implements TaskRepository {
     public Task addTask(Task addedTask) {
         checkFileExistenceAndCreate();
 
+        addedTask.initializeId();
         addedTask.setStatus(Status.TODO);
         addedTask.setCreatedAt(LocalDateTime.now());
         addedTask.setUpdatedAt(LocalDateTime.now());
 
-        writeObjectToFile(addedTask);
+        List<Task> existingTasks = readDataFromFile();
+        existingTasks.add(addedTask);
+        
+        writeObjectsToFile(existingTasks);
 
         return addedTask;
     }
@@ -76,11 +85,11 @@ public class TaskRepositoryImpl implements TaskRepository {
     public Task updateTask(Task updatedTask) {
         dataHelper data = getTaskById(updatedTask.getId());
 
-        updatedTask.setStatus(Status.TODO);
-        updatedTask.setUpdatedAt(LocalDateTime.now());
+        data.task.setDescription(updatedTask.getDescription());
+        data.task.setStatus(Status.TODO);
+        data.task.setUpdatedAt(LocalDateTime.now());
 
-        data.task = updatedTask;
-        writeListOfObjectToFile(data.tasks);
+        writeObjectsToFile(data.tasks);
 
         return data.task;
     }
@@ -89,15 +98,18 @@ public class TaskRepositoryImpl implements TaskRepository {
     public boolean deleteTask(Task deletedTask) {
         List<Task> tasks = getAllTasks();
 
-        if(!tasks.contains(deletedTask)) {
-            writeListOfObjectToFile(tasks);
-            return false;
+        boolean deleted = false;
+        for(int i = 0; i < tasks.size(); i++) {
+            if(tasks.get(i).getId().equals(deletedTask.getId())) {
+                tasks.remove(i);
+                deleted = true;
+                break;
+            }
         }
 
-        tasks.remove(deletedTask);
-        writeListOfObjectToFile(tasks);
+        writeObjectsToFile(tasks);
 
-        return true;
+        return deleted;
     }
 
     @Override
@@ -106,7 +118,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 
         dataHelper data = getTaskById(id);
         data.task.setStatus(newStatus);
-        writeListOfObjectToFile(data.tasks);
+        writeObjectsToFile(data.tasks);
 
         return data.task;
     }
@@ -153,21 +165,21 @@ public class TaskRepositoryImpl implements TaskRepository {
         );
     }
 
-    private void writeObjectToFile(Task taskToWrite) {
-        try {
-            String json = mapper.writeValueAsString(taskToWrite);
+//    private void writeObjectToFile(Task taskToWrite) {
+//        try {
+//            String json = mapper.writeValueAsString(taskToWrite);
+//
+//            Files.writeString(
+//                    path,
+//                    json,
+//                    StandardOpenOption.APPEND
+//            );
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-            Files.writeString(
-                    path,
-                    json,
-                    StandardOpenOption.TRUNCATE_EXISTING
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void writeListOfObjectToFile(List<Task> tasksToWrite) {
+    private void writeObjectsToFile(List<Task> tasksToWrite) {
         try {
             String json = mapper.writeValueAsString(tasksToWrite);
 
@@ -191,17 +203,30 @@ public class TaskRepositoryImpl implements TaskRepository {
         }
     }
 
-    private List<Task> convertJsonDataToPOJO(String jsonData) {
+    private List<Task> convertJsonDataToPOJO(String json) {
         try {
-            return mapper.readValue(
-                    jsonData,
-                    new TypeReference<List<Task>>() {
-                    }
-            );
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e);
+            if(json.isBlank()) return new ArrayList<>();
+            if (json.trim().startsWith("[")) {
+                return mapper.readValue(json, new TypeReference<List<Task>>() {});
+            } else {
+                Task singleTask = mapper.readValue(json, Task.class);
+                return new ArrayList<>(Collections.singletonList(singleTask));
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void verifyIDVariable(){
+        Optional<Task> task = getAllTasks().stream()
+                .max(Comparator.comparingLong(Task::getId));
+
+        Long maxId = 0L;
+        if(task.isPresent()){
+            maxId = task.get().getId();
+        }
+
+        Task.updateIDVariable(maxId);
     }
 }

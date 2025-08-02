@@ -3,16 +3,33 @@ package controller;
 import model.Task;
 import service.TaskService;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Scanner;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class TaskControllerImpl implements TaskController {
     private TaskService taskService;
-    private final Scanner scanner;
+    private static final ReentrantLock lock = new ReentrantLock();
+    private static TaskController instance;
+    private static final String TASK_FORMAT = "| %-5s | %-40s | %-12s | %-16s | %-16s |%n";
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public TaskControllerImpl(TaskService taskService) {
+    private TaskControllerImpl(TaskService taskService) {
         this.taskService = taskService;
-        this.scanner = new Scanner(System.in);
+    }
+
+    public static TaskController getInstance(TaskService taskService) {
+        if(instance == null) {
+            try{
+                lock.lock();
+                if(instance == null) {
+                    instance = new TaskControllerImpl(taskService);
+                }
+            } finally {
+                lock.unlock();
+            }
+        }
+        return instance;
     }
 
     @Override
@@ -50,10 +67,13 @@ public class TaskControllerImpl implements TaskController {
         List<Task> lst = taskService.getAllTasks();
 
         lst.forEach(task -> {
-            System.out.println("Task : id: " + task.getId() +
-                    " status: " + task.getStatus() +
-                    " createdAt: " + task.getCreatedAt() +
-                    " updatedAt: " + task.getUpdatedAt());
+            System.out.printf(
+                    TASK_FORMAT,
+                    task.getId(),
+                    task.getDescription(),
+                    task.getStatus().toString(),
+                    task.getCreatedAt().format(DATE_FORMATTER),
+                    task.getUpdatedAt().format(DATE_FORMATTER));
         });
 
         return lst;
@@ -64,11 +84,14 @@ public class TaskControllerImpl implements TaskController {
         List<Task> lst = taskService.getDoneTasks();
 
         lst.forEach(task -> {
-                    System.out.println("Task : id: " + task.getId() +
-                            " status: " + task.getStatus() +
-                            " createdAt: " + task.getCreatedAt() +
-                            " updatedAt: " + task.getUpdatedAt());
-                });
+            System.out.printf(
+                    TASK_FORMAT,
+                    task.getId(),
+                    task.getDescription(),
+                    task.getStatus().toString(),
+                    task.getCreatedAt().format(DATE_FORMATTER),
+                    task.getUpdatedAt().format(DATE_FORMATTER));
+        });
 
         return lst;
     }
@@ -78,10 +101,13 @@ public class TaskControllerImpl implements TaskController {
         List<Task> lst = taskService.getNotDoneTasks();
 
         lst.forEach(task -> {
-            System.out.println("Task : id: " + task.getId() +
-                    " status: " + task.getStatus() +
-                    " createdAt: " + task.getCreatedAt() +
-                    " updatedAt: " + task.getUpdatedAt());
+            System.out.printf(
+                    TASK_FORMAT,
+                    task.getId(),
+                    task.getDescription(),
+                    task.getStatus().toString(),
+                    task.getCreatedAt().format(DATE_FORMATTER),
+                    task.getUpdatedAt().format(DATE_FORMATTER));
         });
 
         return lst;
@@ -92,12 +118,20 @@ public class TaskControllerImpl implements TaskController {
         List<Task> lst = taskService.getInProgressTasks();
 
         lst.forEach(task -> {
-            System.out.println("Task : id: " + task.getId() +
-                    " status: " + task.getStatus() +
-                    " createdAt: " + task.getCreatedAt() +
-                    " updatedAt: " + task.getUpdatedAt());
+            System.out.printf(
+                    TASK_FORMAT,
+                    task.getId(),
+                    task.getDescription(),
+                    task.getStatus().toString(),
+                    task.getCreatedAt().format(DATE_FORMATTER),
+                    task.getUpdatedAt().format(DATE_FORMATTER));
         });
 
         return lst;
+    }
+
+    @Override
+    public void verifyIDVariable(){
+        taskService.verifyIDVariable();
     }
 }
