@@ -40,7 +40,7 @@ public class CommandManager {
     }
 
     public void run(){
-        System.out.println("Application started!");
+        System.out.println("Application started!\nPrint \"task-cli help\" to see available commands!");
 
         verifyIDVariable();
 
@@ -207,17 +207,18 @@ public class CommandManager {
 
     private void printHelpMenu() {
         String help = """
-                - add [description] : Add a new task
-                - update [id] [description] : Update a task
-                - delete [id] : Delete a task
-                - mark-todo [id] : Mark a task as Todo
-                - mark-in-progress [id] : Mark a task as In-Progress
-                - mark-done [id] : Mark a task as Done
-                - list : List all tasks
-                - list-todo : List all Todo tasks
-                - list-in-progress : List all In-Progress tasks
-                - list-done : List all Done tasks
-                - exit : Exit the program
+                - task-cli add [description] : Add a new task
+                - task-cli update [id] [description] : Update a task
+                - task-cli delete [id] : Delete a task
+                - task-cli mark-todo [id] : Mark a task as Todo
+                - task-cli mark-in-progress [id] : Mark a task as In-Progress
+                - task-cli mark-done [id] : Mark a task as Done
+                - task-cli list : List all tasks
+                - task-cli list-todo : List all undone tasks
+                - task-cli list-in-progress : List all In-Progress tasks
+                - task-cli list-done : List all Done tasks
+                - task-cli help : Shows list of available commands
+                - task-cli quit : Quit the program
                 """;
         System.out.println(help);
     }
