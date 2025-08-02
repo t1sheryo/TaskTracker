@@ -42,3 +42,9 @@ task-cli quit : Quit the program
 | 2     | Implement CLI                            | IN_PROGRESS  | 2024-08-21 10:15 | 2024-08-21 11:00 |
 +-------+------------------------------------------+--------------+------------------+------------------+
 ```
+
+## 🚀 Установка
+
+[![Скачать JAR](https://img.shields.io/badge/Скачать-JAR-зеленый?style=for-the-badge)](https://github.com/t1sheryo/TaskTracker/releases/download/v1.0/TaskTracker-1.0-SNAPSHOT-jar-with-dependencies.jar)
+[![Скачать BAT](https://img.shields.io/badge/Скачать-BAT_файл-синий?style=for-the-badge)](https://github.com/t1sheryo/TaskTracker/releases/download/v1.0/start.bat)
+[![Скачать исходники](https://img.shields.io/badge/Скачать-исходный_код-оранжевый?style=for-the-badge)](https://github.com/t1sheryo/TaskTracker/archive/refs/tags/v1.0.zip)
