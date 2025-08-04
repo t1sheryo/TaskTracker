@@ -85,26 +85,46 @@ public class CommandManager {
     private boolean distribute(String command, String[] params, String[] commands){
         switch (command){
             case "add":
+                if(params.length < 2){
+                    System.out.println("Wrong command! " + VALID_COMMAND_FORMAT);
+                    return false;
+                }
                 addTask(params[1]);
                 System.out.println(BORDER);
                 break;
 
             case "update":
+                if(commands.length < 2 && params.length < 2){
+                    System.out.println("Wrong command! " + VALID_COMMAND_FORMAT);
+                    return false;
+                }
                 updateTask(Long.parseLong(commands[1]), params[1]);
                 System.out.println(BORDER);
                 break;
 
             case "delete":
+                if(commands.length < 2){
+                    System.out.println("Wrong command! " + VALID_COMMAND_FORMAT);
+                    return false;
+                }
                 deleteTask(Long.parseLong(commands[1]));
                 System.out.println(BORDER);
                 break;
 
             case "mark-in-progress":
+                if(commands.length < 2){
+                    System.out.println("Wrong command! " + VALID_COMMAND_FORMAT);
+                    return false;
+                }
                 markInProgress(Long.parseLong(commands[1]));
                 System.out.println(BORDER);
                 break;
 
             case "mark-done":
+                if(commands.length < 2){
+                    System.out.println("Wrong command! " + VALID_COMMAND_FORMAT);
+                    return false;
+                }
                 markDone(Long.parseLong(commands[1]));
                 System.out.println(BORDER);
                 break;
@@ -207,8 +227,8 @@ public class CommandManager {
 
     private void printHelpMenu() {
         String help = """
-                - task-cli add [description] : Add a new task
-                - task-cli update [id] [description] : Update a task
+                - task-cli add "description" : Add a new task
+                - task-cli update [id] "description" : Update a task
                 - task-cli delete [id] : Delete a task
                 - task-cli mark-todo [id] : Mark a task as Todo
                 - task-cli mark-in-progress [id] : Mark a task as In-Progress
