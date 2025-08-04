@@ -8,7 +8,8 @@ Task Status Tracking: Tasks can be marked as Todo, In-Progress, or Done using an
 Persistent Storage: Tasks are saved to a tasks.json file for persistent data storage.
 Formatted Output: Displays tasks in a clean, well-organized table format within the terminal.
 Minimal Dependencies: No external libraries are used, ensuring the project is simple and lightweight.
-## 🚀 How to Run
+
+## 🚀 How to Run as a project
 Clone the repository:
 
 ```
@@ -16,6 +17,13 @@ git clone https://github.com/Farnam-Hs/Task-Tracker.git
 cd Task-Tracker
 Compile and run Application.java
 ```
+
+## 🚀 How to Run as an application
+1) Download JDK 24 version or later
+2) Download Jar and Bat Files
+3) Move these files to the same directory
+4) Run Bat file
+App will run in the terminal!
 
 ## Commands
 ```
