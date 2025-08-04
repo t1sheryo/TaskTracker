@@ -27,8 +27,8 @@ App will run in the terminal!
 
 ## Commands
 ```
-task-cli add [description] : Add a new task
-task-cli update [id] [description] : Update a task
+task-cli add "description" : Add a new task
+task-cli update [id] "description" : Update a task
 task-cli delete [id] : Delete a task
 task-cli mark-todo [id] : Mark a task as Todo
 task-cli mark-in-progress [id] : Mark a task as In-Progress
