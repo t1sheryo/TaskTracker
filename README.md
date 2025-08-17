@@ -1,4 +1,8 @@
 ## Task Tracker CLI
+
+## 🔗 Task requirements 
+[Task Tracker Project Requirements](https://roadmap.sh/projects/task-tracker)
+
 ## 🎯 Overview
 A simple, lightweight Task Tracker application implemented in Java with a Command Line Interface (CLI). The project is designed to help users manage and track their tasks, offering features like adding, updating, viewing, and deleting tasks, all while storing data in a JSON file, ensuring your tasks are saved between sessions.
 
